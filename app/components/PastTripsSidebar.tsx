@@ -2,14 +2,23 @@
 
 import { Box, Typography, List, ListItem, ListItemText, Divider } from '@mui/material';
 
+type Activity = {
+  name: string;
+  category: string;
+  duration: string;
+  bestTime: string;
+  whyRecommended: string;
+  practicalInfo: string;
+};
+
 interface Trip {
   id: string;
   destination: string;
   startDate: string;
   endDate: string;
   createdAt: string;
-  likedActivities: string[];
-  dislikedActivities: string[];
+  likedActivities: Activity[];
+  dislikedActivities: Activity[];
 }
 
 interface PastTripsSidebarProps {

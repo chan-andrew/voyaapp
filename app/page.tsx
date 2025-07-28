@@ -14,14 +14,31 @@ interface Suggestion {
   fullDescription: string;
 }
 
+type Activity = {
+  name: string;
+  category: string;
+  duration: string;
+  bestTime: string;
+  whyRecommended: string;
+  practicalInfo: string;
+};
+
 interface Trip {
   id: string;
   destination: string;
   startDate: string;
   endDate: string;
   createdAt: string;
-  likedActivities: string[];
-  dislikedActivities: string[];
+  likedActivities: Activity[];
+  dislikedActivities: Activity[];
+  preferences?: {
+    likedCategories: string[];
+    dislikedCategories: string[];
+    preferredDurations: string[];
+    preferredTimes: string[];
+    totalLiked: number;
+    totalDisliked: number;
+  };
 }
 
 export default function Home() {
@@ -36,13 +53,14 @@ export default function Home() {
   const [selectedIndex, setSelectedIndex] = useState(-1);
   const [trips, setTrips] = useState<Trip[]>([]);
   const [selectedTrip, setSelectedTrip] = useState<Trip | null>(null);
-  const [activities, setActivities] = useState<string[]>([]);
+  const [activities, setActivities] = useState<Activity[]>([]);
   const [currentActivityIndex, setCurrentActivityIndex] = useState(0);
-  const [likedActivities, setLikedActivities] = useState<string[]>([]);
-  const [dislikedActivities, setDislikedActivities] = useState<string[]>([]);
+  const [likedActivities, setLikedActivities] = useState<Activity[]>([]);
+  const [dislikedActivities, setDislikedActivities] = useState<Activity[]>([]);
   const [isGeneratingActivities, setIsGeneratingActivities] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
   const suggestionsRef = useRef<HTMLDivElement>(null);
+  const justSelectedSuggestion = useRef(false);
 
   // Load trips on component mount
   useEffect(() => {
@@ -88,10 +106,20 @@ export default function Home() {
 
   // Debounced search function
   useEffect(() => {
+    console.log('Destination changed:', destination);
+    
+    // Don't fetch suggestions if we just selected one
+    if (justSelectedSuggestion.current) {
+      justSelectedSuggestion.current = false;
+      return;
+    }
+    
     const timeoutId = setTimeout(() => {
       if (destination.length >= 1) {
+        console.log('Calling fetchSuggestions with:', destination);
         fetchSuggestions(destination);
       } else {
+        console.log('Clearing suggestions - destination too short');
         setSuggestions([]);
         setShowSuggestions(false);
       }
@@ -129,9 +157,11 @@ export default function Home() {
   };
 
   const handleSuggestionClick = (suggestion: Suggestion) => {
+    justSelectedSuggestion.current = true; // Prevent fetching suggestions on destination change
     setDestination(suggestion.fullDescription);
     setShowSuggestions(false);
     setSelectedIndex(-1);
+    setSuggestions([]); // Clear suggestions to prevent reopening
   };
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
@@ -216,7 +246,7 @@ export default function Home() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ destination }),
+        body: JSON.stringify({ destination, startDate, endDate }),
       });
 
       const data = await response.json();
@@ -254,10 +284,19 @@ export default function Home() {
       setCurrentActivityIndex(prev => prev + 1);
     } else {
       // All activities completed
-      handleSaveTrip();
-      setShowActivityCards(false);
-      setShowTripPlanner(false);
-      // Could show a summary or redirect
+      setTimeout(() => {
+        handleSaveTrip();
+        setShowActivityCards(false);
+        setShowTripPlanner(false);
+        // Reset for next trip
+        setDestination("");
+        setStartDate("");
+        setEndDate("");
+        setActivities([]);
+        setCurrentActivityIndex(0);
+        setLikedActivities([]);
+        setDislikedActivities([]);
+      }, 500); // Small delay to let the last card animate out
     }
   };
 
@@ -331,15 +370,13 @@ export default function Home() {
         
         <div className="flex-1 flex justify-center items-center" style={{ marginLeft: '280px' }}>
           <Box sx={{ position: 'relative', width: '300px', height: '400px' }}>
-            {activities.length > 0 ? (
-              activities.map((activity, index) => (
-                <ActivityCard
-                  key={index}
-                  activity={activity}
-                  onSwipe={handleActivitySwipe}
-                  isActive={index === currentActivityIndex}
-                />
-              ))
+            {activities.length > 0 && currentActivityIndex < activities.length ? (
+              <ActivityCard
+                key={currentActivityIndex}
+                activity={activities[currentActivityIndex]}
+                onSwipe={handleActivitySwipe}
+                isActive={true}
+              />
             ) : (
               <Typography variant="h6" sx={{ color: 'white', textAlign: 'center' }}>
                 No activities loaded

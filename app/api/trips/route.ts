@@ -34,6 +34,14 @@ export async function POST(request: NextRequest) {
     const tripsData = fs.readFileSync(TRIPS_FILE, 'utf8');
     const trips = JSON.parse(tripsData);
 
+    // Extract user preferences from liked activities for profile building
+    const likedCategories = likedActivities.map((activity: any) => activity.category);
+    const likedDurations = likedActivities.map((activity: any) => activity.duration);
+    const likedTimes = likedActivities.map((activity: any) => activity.bestTime);
+    
+    // Extract dislikes for better recommendations
+    const dislikedCategories = dislikedActivities.map((activity: any) => activity.category);
+
     const newTrip = {
       id: Date.now().toString(),
       destination,
@@ -41,7 +49,16 @@ export async function POST(request: NextRequest) {
       endDate,
       createdAt: new Date().toISOString(),
       likedActivities,
-      dislikedActivities
+      dislikedActivities,
+      // User profile data for future recommendations
+      preferences: {
+        likedCategories,
+        dislikedCategories,
+        preferredDurations: likedDurations,
+        preferredTimes: likedTimes,
+        totalLiked: likedActivities.length,
+        totalDisliked: dislikedActivities.length
+      }
     };
 
     trips.push(newTrip);

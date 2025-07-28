@@ -7,5 +7,117 @@
     "createdAt": "2025-07-27T01:48:50.967Z",
     "likedActivities": [],
     "dislikedActivities": []
+  },
+  {
+    "id": "1753672678162",
+    "destination": "Japan",
+    "startDate": "2025-07-30",
+    "endDate": "2025-08-06",
+    "createdAt": "2025-07-28T03:17:58.162Z",
+    "likedActivities": [
+      {
+        "name": "Visit Kyoto's Kinkaku-ji (Golden Pavilion)",
+        "category": "Cultural",
+        "duration": "2 hours",
+        "bestTime": "Morning",
+        "whyRecommended": "Kinkaku-ji, with its stunning gold leaf exterior, reflects beautifully in the surrounding pond. Visiting in the morning allows you to experience the tranquility of the gardens before the crowds arrive.",
+        "practicalInfo": "Entry fee is around ¥400. Accessible by bus from Kyoto Station."
+      },
+      {
+        "name": "Savor Traditional Kaiseki Dinner",
+        "category": "Culinary",
+        "duration": "2 hours",
+        "bestTime": "Evening",
+        "whyRecommended": "Kaiseki is a multi-course dining experience that showcases seasonal ingredients and local flavors. It’s an artful expression of Japanese cuisine and culture that’s best enjoyed in the evening.",
+        "practicalInfo": "Reservations recommended; prices vary from ¥5,000 to ¥15,000 depending on the restaurant."
+      },
+      {
+        "name": "Hike in the Japanese Alps",
+        "category": "Outdoor",
+        "duration": "Full Day",
+        "bestTime": "Morning to Afternoon",
+        "whyRecommended": "The Japanese Alps offer breathtaking views and a variety of trails for all skill levels. Summer is an excellent time for hiking, with lush greenery and cooler temperatures at higher altitudes.",
+        "practicalInfo": "Access via train to Matsumoto; consider staying overnight for more trails."
+      },
+      {
+        "name": "Take Part in a Tea Ceremony",
+        "category": "Cultural",
+        "duration": "1-2 hours",
+        "bestTime": "Afternoon",
+        "whyRecommended": "Participating in a traditional tea ceremony allows you to immerse yourself in Japanese culture and appreciate the artistry of tea preparation. It's a peaceful experience that showcases mindfulness.",
+        "practicalInfo": "Most tea houses require advance booking; prices start around ¥2,000."
+      }
+    ],
+    "dislikedActivities": [
+      {
+        "name": "Explore Nara Park and Todai-ji Temple",
+        "category": "Cultural/Historical",
+        "duration": "3-4 hours",
+        "bestTime": "Late Morning",
+        "whyRecommended": "Home to free-roaming deer and the Great Buddha, Nara Park offers a unique blend of nature and history. Strolling through the park allows for close encounters with wildlife and breathtaking temple architecture.",
+        "practicalInfo": "Free entry to the park; Todai-ji Temple entrance fee is ¥600. Easily reachable by train from Kyoto."
+      },
+      {
+        "name": "Attend a Summer Matsuri (Festival)",
+        "category": "Cultural/Entertainment",
+        "duration": "Evening",
+        "bestTime": "Evening",
+        "whyRecommended": "Japan's summer festivals are vibrant showcases of local culture, featuring traditional performances, food stalls, and fireworks. This period is filled with lively celebrations across various cities.",
+        "practicalInfo": "Check local schedules for specific festivals; usually free to attend."
+      },
+      {
+        "name": "Relax at an Onsen (Hot Spring)",
+        "category": "Relaxation",
+        "duration": "2-3 hours",
+        "bestTime": "Afternoon or Evening",
+        "whyRecommended": "Experience the rejuvenating benefits of Japan's natural hot springs, known for their healing properties. Summer offers a unique chance to enjoy outdoor baths surrounded by nature.",
+        "practicalInfo": "Entry fees range from ¥1,000 to ¥3,500. Popular onsens may require prior booking."
+      },
+      {
+        "name": "Visit Tokyo Tower",
+        "category": "Entertainment",
+        "duration": "1-2 hours",
+        "bestTime": "Sunset",
+        "whyRecommended": "Tokyo Tower offers panoramic views of the metropolis, especially beautiful at sunset. The experience is iconic and provides a great photo opportunity.",
+        "practicalInfo": "Entry fee is around ¥1,200. Located in Minato, easily accessible via public transport."
+      },
+      {
+        "name": "Explore the Streets of Gion District",
+        "category": "Cultural",
+        "duration": "2 hours",
+        "bestTime": "Evening",
+        "whyRecommended": "Gion is famous for its traditional wooden machiya houses and geisha culture. Strolling through its streets in the evening gives you a glimpse of old Kyoto and the chance to spot geishas.",
+        "practicalInfo": "Free to explore; guided tours are available for a fee."
+      }
+    ],
+    "preferences": {
+      "likedCategories": [
+        "Cultural",
+        "Culinary",
+        "Outdoor",
+        "Cultural"
+      ],
+      "dislikedCategories": [
+        "Cultural/Historical",
+        "Cultural/Entertainment",
+        "Relaxation",
+        "Entertainment",
+        "Cultural"
+      ],
+      "preferredDurations": [
+        "2 hours",
+        "2 hours",
+        "Full Day",
+        "1-2 hours"
+      ],
+      "preferredTimes": [
+        "Morning",
+        "Evening",
+        "Morning to Afternoon",
+        "Afternoon"
+      ],
+      "totalLiked": 4,
+      "totalDisliked": 5
+    }
   }
 ]
