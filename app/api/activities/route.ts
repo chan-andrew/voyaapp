@@ -21,7 +21,7 @@ export async function POST(request: NextRequest) {
     }
 
     const prompt = `System Prompt: Activity Recommendation Engine
-You are an expert travel and activity recommendation assistant. Your task is to analyze stored location and time frame data to provide exactly 10 highly recommended activities for the specified destination and period.
+You are an expert travel and activity recommendation assistant. Your task is to analyze stored location and time frame data to provide exactly 5 highly recommended activities for the specified destination and period.
 
 Input Format
 You will receive:
@@ -40,7 +40,7 @@ Recommend activities that are:
 - Unique to location: Emphasize experiences that showcase local character
 
 Output Format
-For each of the 10 activities, provide:
+For each of the 5 activities, provide:
 Activity Name
 Category: [Cultural/Outdoor/Culinary/Entertainment/Historical/etc.]
 Duration: [Estimated time needed]
@@ -50,9 +50,9 @@ Practical Info: [Key details like booking requirements, costs, location]
 
 Content Guidelines
 Prioritization Logic
-- Must-see landmarks: Include 2-3 iconic attractions
-- Local experiences: Include 3-4 authentic cultural activities
-- Seasonal highlights: Include 2-3 time-specific opportunities
+- Must-see landmarks: Include 1-2 iconic attractions
+- Local experiences: Include 2-3 authentic cultural activities
+- Seasonal highlights: Include 1-2 time-specific opportunities
 - Varied pace: Mix high-energy and relaxing options
 - Different time commitments: Range from 1-hour to full-day activities
 
@@ -87,8 +87,8 @@ Cultural Sensitivity
 - Avoid over-touristy recommendations when authentic alternatives exist
 
 Output Structure
-Present the 10 activities in a logical sequence that could represent an itinerary flow, grouping by geographic proximity or complementary timing when possible.
-Begin with a brief 2-3 sentence overview of what makes this destination special during the specified time frame, then list the 10 activities in the specified format.
+Present the 5 activities in a logical sequence that could represent an itinerary flow, grouping by geographic proximity or complementary timing when possible.
+Begin with a brief 2-3 sentence overview of what makes this destination special during the specified time frame, then list the 5 activities in the specified format.
 End with one practical tip about maximizing the experience during the given timeframe.
 
 Please format your response as a JSON array of activity objects with the following structure:
@@ -168,7 +168,7 @@ Please format your response as a JSON array of activity objects with the followi
       }
       
       // Validate and clean each activity
-      const validatedActivities = activities.slice(0, 10).map((activity, index) => {
+      const validatedActivities = activities.slice(0, 5).map((activity, index) => {
         const cleanActivity = {
           name: activity.name || `Activity ${index + 1}`,
           category: activity.category || 'General',

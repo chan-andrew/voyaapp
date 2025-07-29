@@ -119,5 +119,177 @@
       "totalLiked": 4,
       "totalDisliked": 5
     }
+  },
+  {
+    "id": "1753747564499",
+    "user": "andrew",
+    "destination": "Rome, Metropolitan City of Rome Capital, Italy",
+    "startDate": "2025-07-31",
+    "endDate": "2025-08-05",
+    "createdAt": "2025-07-29T00:06:04.499Z",
+    "likedActivities": [
+      {
+        "name": "Visit the Colosseum and Roman Forum",
+        "category": "Historical",
+        "duration": "2-3 hours",
+        "bestTime": "Morning (8 AM - 10 AM)",
+        "whyRecommended": "As one of the most iconic landmarks in the world, the Colosseum offers a glimpse into ancient Roman architecture and gladiatorial games. The adjacent Roman Forum allows visitors to wander through the ruins of what was once the heart of ancient Rome.",
+        "practicalInfo": "Tickets can be purchased online in advance to avoid long lines. Entry costs around €18. Arrive early to enjoy a less crowded experience."
+      },
+      {
+        "name": "Cooking Class: Make Authentic Italian Pasta",
+        "category": "Culinary",
+        "duration": "3 hours",
+        "bestTime": "Afternoon (2 PM - 5 PM)",
+        "whyRecommended": "This hands-on class allows you to learn from local chefs how to create traditional Roman pasta dishes. It's both fun and educational, perfect for food lovers.",
+        "practicalInfo": "Classes usually require advance booking, with prices around €70 per person. Various locations throughout the city offer this experience."
+      },
+      {
+        "name": "Stroll through Trastevere",
+        "category": "Cultural",
+        "duration": "2 hours",
+        "bestTime": "Evening (6 PM - 8 PM)",
+        "whyRecommended": "Trastevere is known for its charming streets, vibrant atmosphere, and authentic Roman dining. It's a perfect spot for a leisurely walk and to soak in local life.",
+        "practicalInfo": "This area is pedestrian-friendly and easily accessible via public transport. Enjoy dinner at one of the many trattorias for a true taste of Rome."
+      },
+      {
+        "name": "Visit the Pantheon",
+        "category": "Historical",
+        "duration": "1 hour",
+        "bestTime": "Midday (12 PM - 1 PM)",
+        "whyRecommended": "The Pantheon is one of the best-preserved monuments of ancient Rome and a remarkable example of Roman engineering. Its massive dome and oculus are fascinating to explore.",
+        "practicalInfo": "Entry is free, but consider visiting early afternoon when it tends to be less crowded. Located in the heart of the city, it's also close to many other attractions."
+      },
+      {
+        "name": "Visit the Colosseum and Roman Forum",
+        "category": "Historical",
+        "duration": "2-3 hours",
+        "bestTime": "Morning (8 AM - 10 AM)",
+        "whyRecommended": "As one of the most iconic landmarks in the world, the Colosseum offers a glimpse into ancient Roman architecture and gladiatorial games. The adjacent Roman Forum allows visitors to wander through the ruins of what was once the heart of ancient Rome.",
+        "practicalInfo": "Tickets can be purchased online in advance to avoid long lines. Entry costs around €18. Arrive early to enjoy a less crowded experience."
+      }
+    ],
+    "dislikedActivities": [
+      {
+        "name": "Relax at Villa Borghese Gardens",
+        "category": "Outdoor",
+        "duration": "2-3 hours",
+        "bestTime": "Late Afternoon (4 PM - 7 PM)",
+        "whyRecommended": "These beautiful gardens provide a serene escape from the bustling city. Enjoy a leisurely walk, rent a bike, or even take a boat out on the small lake.",
+        "practicalInfo": "Entry to the gardens is free, but renting bikes or boats incurs a small fee. Don't forget to visit the Borghese Gallery for its impressive art collection (ticket required)."
+      },
+      {
+        "name": "Attend an Opera at Teatro dell'Opera di Roma",
+        "category": "Entertainment",
+        "duration": "2-3 hours",
+        "bestTime": "Evening (usually starts at 8:30 PM)",
+        "whyRecommended": "Experiencing a live opera performance in one of Rome's historic theaters offers a unique cultural experience. The combination of beautiful music and stunning architecture makes for a memorable evening.",
+        "practicalInfo": "Tickets can be purchased online or at the box office. Prices vary depending on the seat, starting around €30."
+      },
+      {
+        "name": "Gelato Tasting Tour",
+        "category": "Culinary",
+        "duration": "2 hours",
+        "bestTime": "Afternoon (4 PM - 6 PM)",
+        "whyRecommended": "Indulge in Italy's most famous dessert with a guided gelato tasting tour. You'll learn about the history and making process while sampling from some of the best gelaterias in Rome.",
+        "practicalInfo": "Book in advance for a group or private tour, typically costing around €45 per person. The tour covers several neighborhoods, making it a delightful way to explore."
+      }
+    ],
+    "preferences": {
+      "likedCategories": [
+        "Historical",
+        "Historical",
+        "Cultural",
+        "Entertainment",
+        "Culinary",
+        "Culinary"
+      ],
+      "dislikedCategories": [
+        "Outdoor",
+        "Historical"
+      ],
+      "preferredDurations": [
+        "2-3 hours",
+        "2-3 hours",
+        "2 hours",
+        "2-3 hours",
+        "3 hours",
+        "2 hours"
+      ],
+      "preferredTimes": [
+        "Morning (8 AM - 10 AM)",
+        "Morning (8 AM - 10 AM)",
+        "Evening (6 PM - 8 PM)",
+        "Evening (usually starts at 8:30 PM)",
+        "Afternoon (2 PM - 5 PM)",
+        "Afternoon (4 PM - 6 PM)"
+      ],
+      "totalLiked": 6,
+      "totalDisliked": 2
+    }
+  },
+  {
+    "id": "1753751844296",
+    "user": "aaron",
+    "destination": "Alaska, USA",
+    "startDate": "2025-08-06",
+    "endDate": "2025-08-14",
+    "createdAt": "2025-07-29T01:17:24.296Z",
+    "likedActivities": [
+      {
+        "name": "Glacier Bay National Park Kayaking Tour",
+        "category": "Outdoor",
+        "duration": "6-8 hours",
+        "bestTime": "Afternoon (12 PM - 2 PM start recommended)",
+        "whyRecommended": "Glacier Bay is a UNESCO World Heritage Site that features stunning glacial vistas and rich marine life. Paddling through the tranquil waters allows you to get close to icebergs and possibly spot seals and sea lions. This immersive experience connects you with Alaska's untouched beauty.",
+        "practicalInfo": "Kayaking tours depart from Gustavus; make reservations in advance. Costs range from $120-$200 per person."
+      },
+      {
+        "name": "Alaskan Seafood Cooking Class",
+        "category": "Culinary",
+        "duration": "3 hours",
+        "bestTime": "Evening (5 PM - 8 PM suggested)",
+        "whyRecommended": "Learn to prepare traditional Alaskan dishes using fresh, locally sourced seafood. This hands-on class not only teaches you fantastic recipes but also shares the cultural significance of Alaskan cuisine, making it a deliciously educational experience.",
+        "practicalInfo": "Classes are held in Anchorage; pre-booking is essential. Prices range from $85 to $120 per person."
+      }
+    ],
+    "dislikedActivities": [
+      {
+        "name": "Denali National Park Wildlife Tour",
+        "category": "Outdoor",
+        "duration": "8 hours",
+        "bestTime": "Morning (8 AM - 9 AM start recommended)",
+        "whyRecommended": "Experience the breathtaking landscapes and diverse wildlife of Denali National Park. With the peak of summer in August, it's the ideal time to spot grizzly bears, moose, and caribou in their natural habitat. The park's majestic views and vast wilderness offer a remarkable adventure for nature enthusiasts.",
+        "practicalInfo": "Tours typically depart from Talkeetna or Anchorage; advance booking is recommended. Costs range from $150-$250 per person."
+      },
+      {
+        "name": "Alaska Native Heritage Center",
+        "category": "Cultural",
+        "duration": "2-3 hours",
+        "bestTime": "Late Morning (10 AM - 12 PM ideal)",
+        "whyRecommended": "The Alaska Native Heritage Center offers a deep dive into the rich cultures and histories of Alaska's Indigenous people. With engaging exhibits and live performances, this center promotes a deeper understanding of the local heritage and traditions.",
+        "practicalInfo": "Located in Anchorage; tickets are about $20 for adults. Check for guided tours available on specific days."
+      }
+    ],
+    "preferences": {
+      "likedCategories": [
+        "Outdoor",
+        "Culinary"
+      ],
+      "dislikedCategories": [
+        "Outdoor",
+        "Cultural"
+      ],
+      "preferredDurations": [
+        "6-8 hours",
+        "3 hours"
+      ],
+      "preferredTimes": [
+        "Afternoon (12 PM - 2 PM start recommended)",
+        "Evening (5 PM - 8 PM suggested)"
+      ],
+      "totalLiked": 2,
+      "totalDisliked": 2
+    }
   }
 ]

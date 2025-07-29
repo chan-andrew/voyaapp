@@ -1,10 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import { Button, TextField, Box, Typography, List, ListItem, ListItemText, Paper } from "@mui/material";
+import { Button, TextField, Box, Typography, List, ListItem, ListItemText, Paper, CircularProgress } from "@mui/material";
 import { useState, useEffect, useRef } from "react";
 import ActivityCard from "./components/ActivityCard";
 import PastTripsSidebar from "./components/PastTripsSidebar";
+import TripDashboard from "./components/TripDashboard";
+import TikTokCollection from "./components/TikTokCollection";
 
 interface Suggestion {
   id: string;
@@ -41,9 +43,24 @@ interface Trip {
   };
 }
 
+interface TikTokActivity {
+  id: string;
+  name: string;
+  location: string;
+  description: string;
+  category: string;
+  transcription: string;
+  videoPath: string;
+  createdAt: string;
+}
+
 export default function Home() {
   const [showTripPlanner, setShowTripPlanner] = useState(false);
   const [showActivityCards, setShowActivityCards] = useState(false);
+  const [showTripDashboard, setShowTripDashboard] = useState(false);
+  const [showTikTokCollection, setShowTikTokCollection] = useState(false);
+  const [showTikTokCards, setShowTikTokCards] = useState(false);
+  const [userName, setUserName] = useState("");
   const [destination, setDestination] = useState("");
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
@@ -58,18 +75,21 @@ export default function Home() {
   const [likedActivities, setLikedActivities] = useState<Activity[]>([]);
   const [dislikedActivities, setDislikedActivities] = useState<Activity[]>([]);
   const [isGeneratingActivities, setIsGeneratingActivities] = useState(false);
+  const [tiktokActivities, setTiktokActivities] = useState<TikTokActivity[]>([]);
   const inputRef = useRef<HTMLInputElement>(null);
   const suggestionsRef = useRef<HTMLDivElement>(null);
   const justSelectedSuggestion = useRef(false);
 
-  // Load trips on component mount
+  // Load trips when user logs in
   useEffect(() => {
-    fetchTrips();
-  }, []);
+    if (userName && showTripPlanner) {
+      fetchTrips();
+    }
+  }, [userName, showTripPlanner]);
 
   const fetchTrips = async () => {
     try {
-      const response = await fetch('/api/trips');
+      const response = await fetch(`/api/trips?user=${encodeURIComponent(userName)}`);
       const data = await response.json();
       setTrips(data.trips || []);
     } catch (error) {
@@ -78,12 +98,17 @@ export default function Home() {
   };
 
   const handleLogin = () => {
-    setShowTripPlanner(true);
+    if (userName.trim()) {
+      setShowTripPlanner(true);
+    }
   };
 
   const handleBackToLogin = () => {
     setShowTripPlanner(false);
     setShowActivityCards(false);
+    setShowTripDashboard(false);
+    setShowTikTokCollection(false);
+    setShowTikTokCards(false);
     setDestination("");
     setStartDate("");
     setEndDate("");
@@ -93,6 +118,26 @@ export default function Home() {
     setCurrentActivityIndex(0);
     setLikedActivities([]);
     setDislikedActivities([]);
+    setSelectedTrip(null);
+  };
+
+  const handleBackToDashboard = () => {
+    setShowActivityCards(false);
+    setShowTripDashboard(false);
+    setShowTikTokCollection(false);
+    setShowTikTokCards(false);
+    setActivities([]);
+    setCurrentActivityIndex(0);
+    setLikedActivities([]);
+    setDislikedActivities([]);
+  };
+
+  const handleTikTokCollectionView = () => {
+    setShowTikTokCollection(true);
+  };
+
+  const handleTikTokActivityAdd = (activity: TikTokActivity) => {
+    setTiktokActivities(prev => [activity, ...prev]);
   };
 
   const getMinDate = () => {
@@ -224,6 +269,7 @@ export default function Home() {
           endDate,
           likedActivities,
           dislikedActivities,
+          user: userName,
         }),
       });
 
@@ -240,6 +286,8 @@ export default function Home() {
 
     console.log('Generating activities for:', destination);
     setIsGeneratingActivities(true);
+    setShowActivityCards(true); // Show the loading screen immediately
+    
     try {
       const response = await fetch('/api/activities', {
         method: 'POST',
@@ -258,13 +306,14 @@ export default function Home() {
         setCurrentActivityIndex(0);
         setLikedActivities([]);
         setDislikedActivities([]);
-        setShowActivityCards(true);
         console.log('Activity cards should now be visible');
       } else {
         console.error('Failed to generate activities:', data.error);
+        setShowActivityCards(false); // Hide if error
       }
     } catch (error) {
       console.error('Error generating activities:', error);
+      setShowActivityCards(false); // Hide if error
     } finally {
       setIsGeneratingActivities(false);
     }
@@ -283,19 +332,33 @@ export default function Home() {
     if (currentActivityIndex < activities.length - 1) {
       setCurrentActivityIndex(prev => prev + 1);
     } else {
-      // All activities completed
-      setTimeout(() => {
-        handleSaveTrip();
+      // All activities completed - save trip and show trip dashboard
+      setTimeout(async () => {
+        await handleSaveTrip();
+        
+        // Create the trip object for the dashboard
+        const completedTrip: Trip = {
+          id: Date.now().toString(),
+          user: userName,
+          destination,
+          startDate,
+          endDate,
+          createdAt: new Date().toISOString(),
+          likedActivities,
+          dislikedActivities,
+          preferences: {
+            likedCategories: likedActivities.map(a => a.category),
+            dislikedCategories: dislikedActivities.map(a => a.category),
+            preferredDurations: likedActivities.map(a => a.duration),
+            preferredTimes: likedActivities.map(a => a.bestTime),
+            totalLiked: likedActivities.length,
+            totalDisliked: dislikedActivities.length
+          }
+        };
+        
+        setSelectedTrip(completedTrip);
         setShowActivityCards(false);
-        setShowTripPlanner(false);
-        // Reset for next trip
-        setDestination("");
-        setStartDate("");
-        setEndDate("");
-        setActivities([]);
-        setCurrentActivityIndex(0);
-        setLikedActivities([]);
-        setDislikedActivities([]);
+        setShowTripDashboard(true);
       }, 500); // Small delay to let the last card animate out
     }
   };
@@ -307,7 +370,46 @@ export default function Home() {
     setEndDate(trip.endDate);
     setLikedActivities(trip.likedActivities);
     setDislikedActivities(trip.dislikedActivities);
+    setShowTripDashboard(true);
   };
+
+  const handleUpdateTrip = async (updatedTrip: Trip) => {
+    try {
+      const response = await fetch(`/api/trips/${updatedTrip.id}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(updatedTrip),
+      });
+
+      if (response.ok) {
+        setSelectedTrip(updatedTrip);
+        await fetchTrips(); // Refresh trips list
+      }
+    } catch (error) {
+      console.error('Error updating trip:', error);
+    }
+  };
+
+  if (showTikTokCollection) {
+    return (
+      <TikTokCollection
+        activities={tiktokActivities}
+        onBack={handleBackToDashboard}
+      />
+    );
+  }
+
+  if (showTripDashboard && selectedTrip) {
+    return (
+      <TripDashboard
+        trip={selectedTrip}
+        onBack={handleBackToDashboard}
+        onUpdateTrip={handleUpdateTrip}
+      />
+    );
+  }
 
   if (!showTripPlanner) {
     return (
@@ -323,10 +425,42 @@ export default function Home() {
             />
           </div>
           <div className="flex flex-col items-center gap-5">
+            <TextField
+              fullWidth
+              placeholder="Enter your first name"
+              value={userName}
+              onChange={(e) => setUserName(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleLogin()}
+              sx={{
+                maxWidth: '300px',
+                '& .MuiOutlinedInput-root': {
+                  borderRadius: '25px',
+                  backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                  '& fieldset': {
+                    borderColor: 'rgba(255, 255, 255, 0.3)',
+                  },
+                  '&:hover fieldset': {
+                    borderColor: '#667eea',
+                  },
+                  '&.Mui-focused fieldset': {
+                    borderColor: '#667eea',
+                  },
+                  '& input': {
+                    color: 'white',
+                    textAlign: 'center',
+                    fontSize: '16px',
+                  },
+                  '& input::placeholder': {
+                    color: 'rgba(255, 255, 255, 0.7)',
+                  },
+                },
+              }}
+            />
             <Button
               variant="contained"
               size="large"
               onClick={handleLogin}
+              disabled={!userName.trim()}
               sx={{
                 background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                 color: 'white',
@@ -348,6 +482,10 @@ export default function Home() {
                   transform: 'translateY(0)',
                   boxShadow: '0 4px 15px rgba(102, 126, 234, 0.3)',
                 },
+                '&:disabled': {
+                  background: 'rgba(255, 255, 255, 0.1)',
+                  color: 'rgba(255, 255, 255, 0.3)',
+                },
               }}
             >
               Login
@@ -361,44 +499,158 @@ export default function Home() {
   if (showActivityCards) {
     console.log('Rendering activity cards. Activities:', activities, 'Current index:', currentActivityIndex);
     return (
-      <div className="min-h-screen bg-black flex justify-center items-center">
-        <PastTripsSidebar 
-          trips={trips}
-          onTripSelect={handleTripSelect}
-          selectedTripId={selectedTrip?.id}
-        />
-        
-        <div className="flex-1 flex justify-center items-center" style={{ marginLeft: '280px' }}>
-          <Box sx={{ position: 'relative', width: '300px', height: '400px' }}>
-            {activities.length > 0 && currentActivityIndex < activities.length ? (
-              <ActivityCard
-                key={currentActivityIndex}
-                activity={activities[currentActivityIndex]}
-                onSwipe={handleActivitySwipe}
-                isActive={true}
-              />
-            ) : (
-              <Typography variant="h6" sx={{ color: 'white', textAlign: 'center' }}>
-                No activities loaded
-              </Typography>
-            )}
-            
-            {isGeneratingActivities && (
-              <Box
-                sx={{
-                  position: 'absolute',
-                  top: '50%',
-                  left: '50%',
-                  transform: 'translate(-50%, -50%)',
-                  color: 'white',
-                  textAlign: 'center',
-                }}
-              >
-                <Typography variant="h6">Generating activities...</Typography>
-              </Box>
-            )}
-          </Box>
+      <div className="min-h-screen bg-black flex flex-col">
+        <div className="flex flex-1 justify-center items-center">
+          <PastTripsSidebar 
+            trips={trips}
+            onTripSelect={handleTripSelect}
+            selectedTripId={selectedTrip?.id}
+            onTikTokCollectionView={handleTikTokCollectionView}
+            tiktokActivities={tiktokActivities}
+            onTikTokActivityAdd={handleTikTokActivityAdd}
+          />
+          
+          <div className="flex-1 flex justify-center items-center" style={{ marginLeft: '280px' }}>
+            <Box sx={{ position: 'relative', width: '300px', height: '400px' }}>
+              {activities.length > 0 && currentActivityIndex < activities.length ? (
+                <>
+                  {/* Next card preview (underneath) */}
+                  {currentActivityIndex + 1 < activities.length && (
+                    <Box
+                      sx={{
+                        position: 'absolute',
+                        width: '100%',
+                        height: '100%',
+                        transform: 'scale(0.95) translateY(8px)',
+                        zIndex: 0,
+                        opacity: 0.7,
+                      }}
+                    >
+                      <ActivityCard
+                        key={currentActivityIndex + 1}
+                        activity={activities[currentActivityIndex + 1]}
+                        onSwipe={() => {}} // No interaction for preview card
+                        isActive={false}
+                      />
+                    </Box>
+                  )}
+                  
+                  {/* Current active card */}
+                  <Box sx={{ position: 'relative', zIndex: 1 }}>
+                    <ActivityCard
+                      key={currentActivityIndex}
+                      activity={activities[currentActivityIndex]}
+                      onSwipe={handleActivitySwipe}
+                      isActive={true}
+                    />
+                  </Box>
+                </>
+              ) : (
+                <Typography variant="h6" sx={{ color: 'white', textAlign: 'center' }}>
+                  No activities loaded
+                </Typography>
+              )}
+              
+              {isGeneratingActivities && (
+                <Box
+                  sx={{
+                    position: 'absolute',
+                    top: '50%',
+                    left: '50%',
+                    transform: 'translate(-50%, -50%)',
+                    color: 'white',
+                    textAlign: 'center',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center',
+                    gap: 2,
+                  }}
+                >
+                  <CircularProgress 
+                    size={50}
+                    sx={{ 
+                      color: '#667eea',
+                      '& .MuiCircularProgress-circle': {
+                        strokeLinecap: 'round',
+                      }
+                    }} 
+                  />
+                  <Typography variant="h6" sx={{ fontWeight: 500 }}>
+                    Generating activities
+                    <Box 
+                      component="span" 
+                      sx={{
+                        '& .dot': {
+                          animation: 'pulse 1.5s ease-in-out infinite',
+                          fontSize: 'inherit',
+                        },
+                        '& .dot:nth-of-type(1)': {
+                          animationDelay: '0s',
+                        },
+                        '& .dot:nth-of-type(2)': {
+                          animationDelay: '0.5s',
+                        },
+                        '& .dot:nth-of-type(3)': {
+                          animationDelay: '1s',
+                        },
+                        '@keyframes pulse': {
+                          '0%': { opacity: 0.4 },
+                          '50%': { opacity: 1 },
+                          '100%': { opacity: 0.4 },
+                        },
+                      }}
+                    >
+                      <span className="dot">.</span>
+                      <span className="dot">.</span>
+                      <span className="dot">.</span>
+                    </Box>
+                  </Typography>
+                  <Typography variant="body2" sx={{ color: 'rgba(255, 255, 255, 0.7)' }}>
+                    Finding the best experiences for you
+                  </Typography>
+                </Box>
+              )}
+            </Box>
+          </div>
         </div>
+        
+        {/* Bottom Back Button Bar */}
+        <Box
+          sx={{
+            position: 'fixed',
+            bottom: 0,
+            left: 0,
+            right: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.9)',
+            borderTop: '1px solid rgba(255, 255, 255, 0.1)',
+            padding: '16px',
+            display: 'flex',
+            justifyContent: 'center',
+            backdropFilter: 'blur(10px)',
+          }}
+        >
+          <Button
+            variant="outlined"
+            onClick={handleBackToDashboard}
+            sx={{
+              borderColor: 'rgba(255, 255, 255, 0.3)',
+              color: 'white',
+              borderRadius: '25px',
+              textTransform: 'none',
+              fontWeight: 500,
+              fontSize: '14px',
+              padding: '8px 24px',
+              transition: 'all 0.3s ease',
+              '&:hover': {
+                borderColor: '#667eea',
+                backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                transform: 'translateY(-1px)',
+              },
+            }}
+          >
+            ← Back to Dashboard
+          </Button>
+        </Box>
       </div>
     );
   }
@@ -409,6 +661,9 @@ export default function Home() {
         trips={trips}
         onTripSelect={handleTripSelect}
         selectedTripId={selectedTrip?.id}
+        onTikTokCollectionView={handleTikTokCollectionView}
+        tiktokActivities={tiktokActivities}
+        onTikTokActivityAdd={handleTikTokActivityAdd}
       />
       
       <div className="flex-1 flex justify-center items-center p-8" style={{ marginLeft: '280px' }}>
@@ -422,6 +677,21 @@ export default function Home() {
               height={80}
               className="mx-auto mb-6 animate-fade-in"
             />
+            <Typography 
+              variant="h5" 
+              component="h2" 
+              className="text-center font-medium text-white mb-4 animate-fade-in"
+              sx={{
+                animation: 'fadeIn 0.8s ease-in-out',
+                color: 'rgba(255, 255, 255, 0.8)',
+                '@keyframes fadeIn': {
+                  '0%': { opacity: 0, transform: 'translateY(20px)' },
+                  '100%': { opacity: 1, transform: 'translateY(0)' },
+                },
+              }}
+            >
+              Welcome back, {userName}!
+            </Typography>
             <Typography 
               variant="h4" 
               component="h1" 
@@ -706,6 +976,34 @@ export default function Home() {
               {isGeneratingActivities ? 'Generating...' : 'Give me some ideas please'}
             </Button>
           </div>
+
+          {/* TikTok Activities Section */}
+          {tiktokActivities.length > 0 && (
+            <div className="pt-6 animate-fade-in" style={{ animationDelay: '0.8s' }}>
+              <Button
+                variant="outlined"
+                fullWidth
+                onClick={() => setShowTikTokCards(true)}
+                sx={{
+                  borderColor: '#ff1493',
+                  color: '#ff1493',
+                  borderRadius: '25px',
+                  textTransform: 'none',
+                  fontWeight: 500,
+                  fontSize: '14px',
+                  padding: '8px 16px',
+                  transition: 'all 0.3s ease',
+                  '&:hover': {
+                    borderColor: '#ff1493',
+                    backgroundColor: 'rgba(255, 20, 147, 0.1)',
+                    transform: 'translateY(-1px)',
+                  },
+                }}
+              >
+                📱 Browse TikTok Activities ({tiktokActivities.length})
+              </Button>
+            </div>
+          )}
 
           {/* Back to Login Button */}
           <div className="pt-8 animate-fade-in" style={{ animationDelay: '0.8s' }}>

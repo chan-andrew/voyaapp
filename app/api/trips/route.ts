@@ -15,10 +15,17 @@ if (!fs.existsSync(TRIPS_FILE)) {
   fs.writeFileSync(TRIPS_FILE, JSON.stringify([]));
 }
 
-export async function GET() {
+export async function GET(request: NextRequest) {
   try {
+    const { searchParams } = new URL(request.url);
+    const user = searchParams.get('user');
+    
     const tripsData = fs.readFileSync(TRIPS_FILE, 'utf8');
-    const trips = JSON.parse(tripsData);
+    const allTrips = JSON.parse(tripsData);
+    
+    // Filter trips by user if user parameter is provided
+    const trips = user ? allTrips.filter((trip: any) => trip.user === user) : allTrips;
+    
     return NextResponse.json({ trips });
   } catch (error) {
     console.error('Error reading trips:', error);
@@ -29,7 +36,7 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { destination, startDate, endDate, likedActivities = [], dislikedActivities = [] } = body;
+    const { destination, startDate, endDate, likedActivities = [], dislikedActivities = [], user } = body;
 
     const tripsData = fs.readFileSync(TRIPS_FILE, 'utf8');
     const trips = JSON.parse(tripsData);
@@ -44,6 +51,7 @@ export async function POST(request: NextRequest) {
 
     const newTrip = {
       id: Date.now().toString(),
+      user,
       destination,
       startDate,
       endDate,

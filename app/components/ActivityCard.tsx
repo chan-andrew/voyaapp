@@ -244,39 +244,85 @@ export default function ActivityCard({ activity, onSwipe, isActive }: ActivityCa
           </Box>
         )}
 
-        <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 2, zIndex: 2 }}>
+        {/* Activity Title */}
+        <Typography variant="h5" sx={{ fontWeight: 'bold', mb: 2, zIndex: 2, lineHeight: 1.2 }}>
           {activity.name}
         </Typography>
         
-        <Box sx={{ display: 'flex', alignItems: 'center', mb: 1, zIndex: 2 }}>
-          <Typography 
-            variant="caption" 
-            sx={{ 
-              backgroundColor: 'rgba(255, 255, 255, 0.2)', 
-              px: 1, 
-              py: 0.5, 
-              borderRadius: '4px',
-              fontSize: '11px'
-            }}
-          >
-            {activity.category}
-          </Typography>
-          <Typography variant="caption" sx={{ ml: 1, opacity: 0.8 }}>
-            {activity.duration}
-          </Typography>
-        </Box>
-        
-        <Typography variant="body2" sx={{ mb: 2, opacity: 0.9, zIndex: 2 }}>
-          {activity.whyRecommended}
+        {/* Category Badge */}
+        <Typography 
+          variant="caption" 
+          sx={{ 
+            backgroundColor: 'rgba(255, 255, 255, 0.25)', 
+            px: 2, 
+            py: 0.5, 
+            borderRadius: '12px',
+            fontSize: '12px',
+            fontWeight: 500,
+            mb: 2,
+            zIndex: 2
+          }}
+        >
+          {activity.category}
         </Typography>
         
-        <Box sx={{ textAlign: 'left', width: '100%', zIndex: 2 }}>
-          <Typography variant="caption" sx={{ display: 'block', mb: 1, opacity: 0.8 }}>
-            <strong>Best Time:</strong> {activity.bestTime}
-          </Typography>
-          <Typography variant="caption" sx={{ display: 'block', opacity: 0.8 }}>
-            <strong>Practical Info:</strong> {activity.practicalInfo}
-          </Typography>
+        {/* Brief Description */}
+        <Typography variant="body2" sx={{ 
+          mb: 3, 
+          opacity: 0.95, 
+          zIndex: 2, 
+          lineHeight: 1.4,
+          fontSize: '14px',
+          textAlign: 'center'
+        }}>
+          {activity.whyRecommended.length > 120 ? 
+            `${activity.whyRecommended.substring(0, 120)}...` : 
+            activity.whyRecommended
+          }
+        </Typography>
+        
+        {/* Recommended Time & Price */}
+        <Box sx={{ 
+          display: 'flex', 
+          justifyContent: 'space-between', 
+          width: '100%', 
+          mt: 'auto',
+          pt: 2,
+          zIndex: 2 
+        }}>
+          <Box sx={{ textAlign: 'left' }}>
+            <Typography variant="caption" sx={{ 
+              display: 'block', 
+              opacity: 0.8, 
+              fontSize: '11px',
+              fontWeight: 500 
+            }}>
+              BEST TIME
+            </Typography>
+            <Typography variant="body2" sx={{ 
+              fontWeight: 600, 
+              fontSize: '13px' 
+            }}>
+              {activity.bestTime}
+            </Typography>
+          </Box>
+          
+          <Box sx={{ textAlign: 'right' }}>
+            <Typography variant="caption" sx={{ 
+              display: 'block', 
+              opacity: 0.8, 
+              fontSize: '11px',
+              fontWeight: 500 
+            }}>
+              DURATION
+            </Typography>
+            <Typography variant="body2" sx={{ 
+              fontWeight: 600, 
+              fontSize: '13px' 
+            }}>
+              {activity.duration}
+            </Typography>
+          </Box>
         </Box>
       </CardContent>
     </Card>
